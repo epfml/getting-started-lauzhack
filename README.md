@@ -57,7 +57,7 @@ The step-by-step instructions for first time users to quickly get a notebook run
         --name setup-test-storage \
         --image ubuntu \
         --pvc runai-mlo-lauzhack-$GASPAR_USERNAME-scratch:/mloscratch \
-        -- ls -la /mloscratch/homes
+        -- sleep infinity
       # Check the status of the job
       runai describe job setup-test-storage
 
