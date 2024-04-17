@@ -27,6 +27,7 @@ parser.add_argument(
     "-t",
     "--time",
     type=str,
+    default="12h",
     required=False,
     help="The maximum duration allowed for this job (default 24h)",
 )
@@ -58,7 +59,7 @@ parser.add_argument(
     "--image",
     type=str,
     required=False,
-    default="ic-registry.epfl.ch/mlo/mlo:v1",
+    default="ic-registry.epfl.ch/mlo/lauzhack:v1",
     help="The URL of the docker image that will be used for the job",
 )
 parser.add_argument(
@@ -174,7 +175,7 @@ metadata:
   labels:
     PreviousJob: "true"
   name: {args.name}
-  namespace: runai-mlo-{user_cfg['user']}
+  namespace: runai-mlo-lauzhack-{user_cfg['user']}
 spec:
   name:
     value: {args.name}

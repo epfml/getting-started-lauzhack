@@ -8,7 +8,7 @@ For starters, we recommend you to go through the [minimal basic setup](#minimal-
 If you come up with any question about the cluster or the setup that you do not find answered here, you can check the [frequently asked questions page](docs/faq.md). Also, please do not hesitate to reach out to any of your colleagues or the organizers (e.g. on Discord), we are happy to help you out.
 
 > [!CAUTION]
-> Using the cluster creates costs. Please do not forget to stop your jobs when not used!
+> You are sharing the cluster with other teams. Please be mindful of the resources you use. **Do not forget to stop your jobs when not used!**
 
 # Minimal basic setup
 The step-by-step instructions for first time users to quickly get a job running. 
@@ -18,7 +18,7 @@ The step-by-step instructions for first time users to quickly get a job running.
 
 ## 1: Pre-setup (access, repository)
 
-**Group access:** For each team, you need to have one EPFL member to get access to the cluster. Send this one member's gaspar account to us to add you to the group `runai-mlo-lauzhack` (https://groups.epfl.ch/) by sending a message on the Discord channel #TODO. Because of limited resources, we can only add one person per team, so make sure to coordinate this within your team. Depending on availability, we might be able to add more people.
+**Group access:** For each team, you need to have one EPFL member to get access to the cluster. Send this one member's gaspar account to us to add you to the group `runai-mlo-lauzhack` (https://groups.epfl.ch/) by sending a message on the Discord channel #TODO. Because of limited resources, we can only add one person per team, so make sure to coordinate this within your team. 
 
 **Prepare your code:** While you are waiting to get access, create a fork of the [llm-baselines](https://github.com/epfml/llm-baselines) repository. This is the fork that you will use to run your experiments and submit your solution. You can already checkout some of the code if you want to get a head start. Make sure you add all of your team members to the repository.
 
@@ -55,7 +55,7 @@ The following are just a bunch of commands you need to run to get started. If yo
 ## Login and run a test job
 Once you have access to the cluster and the tools installed, you can start setting up the cluster and running a test job.
 
-5. Login to the cluster.
+4. Login to the cluster.
    ```bash
       # Setup the RCP cluster
       runai config cluster rcp-context
@@ -64,25 +64,8 @@ Once you have access to the cluster and the tools installed, you can start setti
       # Check that things worked fine
       runai list projects
       # put your default project
-      runai config project mlo-lauzhack-$GASPAR_USERNAME
+      runai config project mlo-lauzhack-$YOUR_GASPAR_USERNAME
    ```
-6. Run a quick test to see that you can launch jobs:
-   ```bash
-      # Try to submit a job that mounts our shared storage and see its content.
-      runai submit \
-        --name setup-test-storage \
-        --image ic-registry.epfl.ch/mlo/lauzhack:v1 \
-        --pvc runai-mlo-lauzhack-$GASPAR_USERNAME-scratch:/mloscratch \
-        -- sleep infinity
-      # Check the status of the job
-      runai describe job setup-test-storage
-
-      # Check its logs to see that it ran (after a while)
-      runai logs setup-test-storage
-
-      # Delete the successful jobs
-      runai delete jobs setup-test-storage
-    ```
 
 Next, we provide a script in this repository to make your life easier to get started. Then we show you how to run the llm-baselines code.
 
@@ -94,7 +77,7 @@ Next, we provide a script in this repository to make your life easier to get sta
    
 3. Create a pod with 1 GPU which expires in 12 hours (you may need to install pyyaml with `pip install pyyaml` first).
 ```bash
-python csub.py -n sandbox -g 1 -t 12h -i ic-registry.epfl.ch/mlo/lauzhack:v1 --command "sleep infinity"
+python csub.py -n sandbox
 ```
 
 4. Wait until the pod has a 'running' status -- this can take a bit (max ~5 min or so). Check the status of the job with 
@@ -196,9 +179,6 @@ Of course, the script is just one suggested workflow that tries to maximize prod
 > * When your code is ready and you want to run some experiments or you need to debug on GPU, you can create one or more new pods with GPU. Simply specify the command in the python launch script.
 > * Using a training job makes sure that you kill the pod when your code/experiment is finished in order to save money.
 
-Most importantly:
->[!CAUTION]
-> Using the cluster creates costs. Please do not forget to stop your jobs when not used!
 
 ## Using VSCODE
 To easily attach a VSCODE window to a pod we recommend the following steps: 
@@ -210,14 +190,6 @@ To easily attach a VSCODE window to a pod we recommend the following steps:
 
 You can also see a pictorial description [here](https://wiki.rcp.epfl.ch/en/home/CaaS/how-to-vscode).
 
-## The HaaS machine
-The HaaS machine is provided by IT that allows you to move files, create folders, and copy files between `mlodata1`, `mloraw1`, and `mloscratch`, without needing to create a pod. You can access it via:
-```bash
-  # For basic file movement, folder creation, or
-  # copying from/to mlodata1 to/from scratch:
-  ssh <gaspar_username>@haas001.rcp.epfl.ch
-```
-The volumes are mounted inside the folders `/mnt/mlo/mlodata1`, `/mnt/mlo/mloraw1`, `/mnt/mlo/scratch`. See below for what the spaces are used for.
 
 ## File management
 Reminder: the cluster uses kubernetes pods, which means that in principle, any file created inside a pod will be deleted when the pod is killed. 
