@@ -2,9 +2,9 @@
 user: <enter username>
 uid: <enter uid>
 group: MLO-unit
-gid: 75545
+gid: 81752
 wandb_api_key: <enter api key>
-working_dir: /mloscratch/homes/<enter username>
+working_dir: /mloscratch/<enter username>
 symlinks: # list of symlinks to create (enter 'dir' or 'file' and the path)')
   .ssh: [dir, .ssh]
   .bashrc: [file, .bashrc]
@@ -15,4 +15,3 @@ symlinks: # list of symlinks to create (enter 'dir' or 'file' and the path)')
   .gitconfig: [file, .gitconfig]
   .vscode: [dir, .vscode]
   .vscode-server: [dir, .vscode-server]
-  conda: [conda, conda]

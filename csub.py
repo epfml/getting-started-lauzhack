@@ -221,7 +221,7 @@ spec:
     items:
       pvc--0:
         value:
-          claimName: runai-mlo-{user_cfg['user']}-scratch
+          claimName: runai-mlo-lauzhack-{user_cfg['user']}-scratch
           existingPvc: true
           path: /mloscratch
           readOnly: false

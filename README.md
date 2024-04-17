@@ -20,11 +20,11 @@ The step-by-step instructions for first time users to quickly get a job running.
 
 **Group access:** For each team, you need to have one EPFL member to get access to the cluster. Send this one member's gaspar account to us to add you to the group `runai-mlo-lauzhack` (https://groups.epfl.ch/) by sending a message on the Discord channel #TODO. Because of limited resources, we can only add one person per team, so make sure to coordinate this within your team. Depending on availability, we might be able to add more people.
 
-**Prepare your code:** While you are waiting to get access, create a fork of the [llm-baselines](https://github.com/epfml/llm-baselines) repository. This is the repository that you will use to run your experiments and submit your solution. You can already checkout some of the code if you want to get a head start. Make sure you add all of your team members to the repository.
+**Prepare your code:** While you are waiting to get access, create a fork of the [llm-baselines](https://github.com/epfml/llm-baselines) repository. This is the fork that you will use to run your experiments and submit your solution. You can already checkout some of the code if you want to get a head start. Make sure you add all of your team members to the repository.
 
-**Prepare Weights and Biases:** For logging the results of your experiments, you can use [Weights and Biases](https://wandb.ai/). Create an account.
+**Prepare Weights and Biases:** For logging the results of your experiments, you can use [Weights and Biases](https://wandb.ai/). Create an account if you don't already have one. You will need an API key to later log your experiments.
 
-The following are just a bunch of commands you need to run to get started. You can copy-paste them into your terminal.
+The following are just a bunch of commands you need to run to get started. If you do not understand them in detail, you can copy-paste them into your terminal :)
 
 ## 2: Setup the tools
 
@@ -71,13 +71,13 @@ Once you have access to the cluster and the tools installed, you can start setti
       # Try to submit a job that mounts our shared storage and see its content.
       runai submit \
         --name setup-test-storage \
-        --image ubuntu \
+        --image ic-registry.epfl.ch/mlo/lauzhack:v1 \
         --pvc runai-mlo-lauzhack-$GASPAR_USERNAME-scratch:/mloscratch \
         -- sleep infinity
       # Check the status of the job
       runai describe job setup-test-storage
 
-      # Check its logs to see that it ran.
+      # Check its logs to see that it ran (after a while)
       runai logs setup-test-storage
 
       # Delete the successful jobs
@@ -94,7 +94,7 @@ Next, we provide a script in this repository to make your life easier to get sta
    
 3. Create a pod with 1 GPU which expires in 12 hours (you may need to install pyyaml with `pip install pyyaml` first).
 ```bash
-python csub.py -n sandbox -g 1 -t 7d -i ic-registry.epfl.ch/mlo/lauzhack:v1 --command "sleep infinity"
+python csub.py -n sandbox -g 1 -t 12h -i ic-registry.epfl.ch/mlo/lauzhack:v1 --command "sleep infinity"
 ```
 
 4. Wait until the pod has a 'running' status -- this can take a bit (max ~5 min or so). Check the status of the job with 
@@ -119,13 +119,13 @@ cd llm-baselines
 ```
 2. Now you can run the code as you would on your local machine. For example, to run the `train.py` script, you can use the following command:
 ```bash
-python src/main.py
+python src/main.py --wandb
 ```
 
 Hopefully, this should work and you're up and running! For remote development (changing code, debugging, etc.), we recommend using VSCode. You can find more information on how to set it up in the [VSCode section](#using-vscode).
 
 > [!IMPORTANT]
-> Generally, the workflow we recommend is simple: develop your code locally or on the cluster (e.g. with VS Code), push it to your repository. Then, run it on the cluster with the terminal that is attached via `runai exec sandbox -it -- zsh`. This way, you can keep your code and experiments organized and reproducible.
+> Generally, the workflow we recommend is simple: develop your code locally or on the cluster (e.g. with VS Code), then push it to your repository. Once you want to try, run it on the cluster with the terminal that is attached via `runai exec sandbox -it -- zsh`. This way, you can keep your code and experiments organized and reproducible.
 >
 > Note that your pods **can be killed anytime**. This means you might need to restart an experiment (with the `python csub.py` command we give above).
 > 
@@ -134,7 +134,7 @@ Hopefully, this should work and you're up and running! For remote development (c
 > The rest of the README is more detailed information on the cluster, the scripts, and the setup. 
 
 # Extra details on usage of the cluster
-This is more info on the cluster, the scripts, and the setup. You do not need to read this (unless you're interested in the details). It is a copy of our internal documentation.
+This is more info on the cluster, the scripts, and the setup. You do not need to read this (unless you're interested in the details or want to go beyond the interactive workflow above). It is a copy of our internal documentation.
 
 ## Using the python script to launch jobs
 The python script `csub.py` is a wrapper around the run:ai CLI that makes it easier to launch jobs. It is meant to be used for both interactive jobs (e.g. notebooks) and training jobs.

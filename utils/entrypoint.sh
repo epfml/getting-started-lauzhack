@@ -46,40 +46,33 @@ for index in ${!target_array[*]}; do
     ln -s ${target_array[$index]} ${path_array[$index]}
 
   else
-    if [ ${types_array[$index]} == "conda" ]; then # install conda
-      wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
-      /bin/bash ~/miniconda.sh -b -p ${target_array[$index]}
-      rm -rf ~/miniconda.sh
-      ${target_array[$index]}/bin/conda init zsh
-      source ~/.zshrc
+    # create the dir or file
+    # if possible, copy from /docker/ (which has e.g. oh-my-zsh installed)
+    FILENAME="$(basename ${target_array[$index]})"
 
-    else # create the dir or file
-      # if possible, copy from /docker/ (which has e.g. oh-my-zsh installed)
-      FILENAME="$(basename ${target_array[$index]})"
+    if [[ -f /docker/${FILENAME} ]] || [[ -d /docker/${FILENAME} ]]; then
+      cp -r /docker/${FILENAME} ${target_array[$index]}
 
-      if [[ -f /docker/${FILENAME} ]] || [[ -d /docker/${FILENAME} ]]; then
-        cp -r /docker/${FILENAME} ${target_array[$index]}
+      # change ownership to user
+      chown -R ${NB_USER}:$NB_GROUP ${target_array[$index]}
+      perm=$(stat -c "%a" ${target_array[$index]})
+      chmod -R $perm ${target_array[$index]}
 
-        # change ownership to user
-        chown -R ${NB_USER}:$NB_GROUP ${target_array[$index]}
-        perm=$(stat -c "%a" ${target_array[$index]})
-        chmod -R $perm ${target_array[$index]}
+    else
 
+      # root does not have file/dir, create it
+      if [ ${types_array[$index]} == "dir" ]; then
+        mkdir ${target_array[$index]}
       else
-
-        # root does not have file/dir, create it
-        if [ ${types_array[$index]} == "dir" ]; then
-          mkdir ${target_array[$index]}
+        if [ ${types_array[$index]} == "file" ]; then
+          touch ${target_array[$index]}
         else
-          if [ ${types_array[$index]} == "file" ]; then
-            touch ${target_array[$index]}
-          else
-            echo "ERROR: SYMLINK_TYPES must be either 'dir', 'file' or 'conda'"
-            exit 1
-          fi
+          echo "ERROR: SYMLINK_TYPES must be either 'dir', 'file' or 'conda'"
+          exit 1
         fi
       fi
     fi
+
     # create a symlink to the target
     ln -s ${target_array[$index]} ${path_array[$index]}
 

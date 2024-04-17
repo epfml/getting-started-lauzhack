@@ -72,4 +72,6 @@ RUN echo "umask 007" >> /docker/.zshrc
 RUN echo "umask 007" >> /docker/.bashrc
 
 
+RUN pip install tiktoken --find-links https://download.pytorch.org/whl/torch_stable.html torch==2.0.0+cu118 torchaudio==2.0.0+cu118 torchvision==0.15.0+cu118 tqdm==4.65.0 transformers wandb datasets zstandard
+
 ENTRYPOINT ["/docker/entrypoint.sh"]
