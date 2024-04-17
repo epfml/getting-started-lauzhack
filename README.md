@@ -1,4 +1,4 @@
-# MLO: Getting started with the EPFL Clusters
+# MLO @ LauzHack: Getting started with the EPFL Clusters
 This repository contains the basic steps to start running scripts and notebooks on the EPFL Clusters (both RCP and IC) -- so that you don't have to go through the countless documentations by yourself! We also provide scripts that can make your life easier by automating a lot of things. It is based on a similar setup from our friends at TML and CLAIRE, and scripts created by Atli :)
 
 There are two clusters available to us: the IC cluster (department only) and the RCP cluster (EPFL-wide). The RCP cluster has A100 (80GB) GPUs, while the IC cluster is equipped with older V100 (32GB) and A100 (40GB) GPUs. You can switch between the two clusters and their respective GPUs. The system is built on top of [Docker](https://www.docker.com) (containers), [Kubernetes](https://kubernetes.io) (automating deployment of containers) and [run:ai](https://run.ai) (scheduler on top of Kubernetes).
@@ -14,7 +14,7 @@ For specific problems and errors you think you should not be getting, open a tic
 ## Minimal basic setup
 The step-by-step instructions for first time users to quickly get a notebook running. Make sure you are on the EPFL wifi or connected to the VPN.
 
-1. Ask Jennifer or Martin to add you to the group `runai-mlo`: https://groups.epfl.ch/ 
+1. Ask Jennifer or Martin to add you to the group `runai-mlo-lauzhack`: https://groups.epfl.ch/ 
 
 2. Install kubectl. To make sure the version matches with the clusters (status: 15.12.2023), on macOS with Apple Silicon, run the following commands. For other systems, you will need to change the URL in the command above (check https://kubernetes.io/docs/tasks/tools/install-kubectl/). Make sure that the version matches with the version of the cluster!
 ```bash
@@ -41,19 +41,14 @@ The step-by-step instructions for first time users to quickly get a notebook run
    ```
 5. Switch between contexts and login to both clusters.
    ```bash
-      # Switch to the IC cluster
-      runai config cluster ic-context
+      # Setup the RCP cluster
+      runai config cluster rcp-context
       # Login to the cluster
       runai login
       # Check that things worked fine
       runai list projects
       # put your default project
-      runai config project mlo-$GASPAR_USERNAME
-      # Repeat for the RCP cluster
-      runai config cluster rcp-context
-      runai login
-      runai list projects
-      runai config project mlo-$GASPAR_USERNAME
+      runai config project mlo-lauzhack-$GASPAR_USERNAME
    ```
 6. Run a quick test to see that you can launch jobs:
    ```bash
@@ -61,7 +56,7 @@ The step-by-step instructions for first time users to quickly get a notebook run
       runai submit \
         --name setup-test-storage \
         --image ubuntu \
-        --pvc runai-mlo-$GASPAR_USERNAME-scratch:/mloscratch \
+        --pvc runai-mlo-lauzhack-$GASPAR_USERNAME-scratch:/mloscratch \
         -- ls -la /mloscratch/homes
       # Check the status of the job
       runai describe job setup-test-storage
