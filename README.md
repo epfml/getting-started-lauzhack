@@ -25,7 +25,7 @@ The step-by-step instructions for first time users to quickly get a job running.
 > 
 > * Run your code: `cd /mloscratch/<your username>; python src/main.py --wandb`
 >
-> * In one go, you can also do: `python csub.py -n sandbox --train --command "cd /mloscratch/<your username>; python src/main.py --wandb"`
+> * In one go, you can also do: `python csub.py -n sandbox --train --command "cd /mloscratch/<your username>/llm-baselines; python src/main.py --wandb"`
 
 ---
 
@@ -130,10 +130,12 @@ cd llm-baselines
 2. Now you can run the code as you would on your local machine. For example, to run the `train.py` script, you can use the following command:
 ```bash
 # Inside the pod, inside /mloscratch/<your username>/llm-baselines
-python src/main.py --wandb
+python src/main.py --wandb --wandb_project lauzhack-llm
 ```
 
-Hopefully, this should work and you're up and running! For remote development (changing code, debugging, etc.), we recommend using VSCode. You can find more information on how to set it up in the [VSCode section](#using-vscode).
+Hopefully, this should work and you're up and running! You should be able to track your job on your wandb dashboard (and see the loss going down :) )
+
+For remote development (changing code, debugging, etc.), we recommend using VSCode. You can find more information on how to set it up in the [VSCode section](#using-vscode).
 
 > [!TIP]
 > Generally, the workflow we recommend is simple: develop your code locally or on the cluster (e.g. with VS Code), then push it to your repository. Once you want to try, run it on the cluster with the terminal that is attached via `runai exec sandbox -it -- zsh`. This way, you can keep your code and experiments organized and reproducible.
@@ -142,7 +144,7 @@ Hopefully, this should work and you're up and running! For remote development (c
 > 
 > **Keep your files inside your home folder**: Importantly, when a job is restarted or killed, everything inside the container folders of `~/` are lost. This is why you need to work inside `/mloscratch/<your username>`.
 >
-> To have a job that can run in the background, do `python csub.py -n sandbox --train --command "cd /mloscratch/<your username>; python src/main.py --wandb"`
+> To have a job that can run in the background, do `python csub.py -n sandbox --train --command "cd /mloscratch/<your username>/llm-baselines; python src/main.py --wandb"`
 >
 > The rest of the README is more detailed information on the cluster, the scripts, and the setup. 
 
@@ -164,18 +166,17 @@ The python script `csub.py` is a wrapper around the run:ai CLI that makes it eas
 General usage:
 
 ```bash
-python csub.py --n <job_name> -g <number of GPUs> -t <time> -i ic-registry.epfl.ch/mlo/mlo:v1 --command <cmd> [--train]
+python csub.py --n <job_name> -g <number of GPUs> -t <time> --command <cmd> [--train]
 ```
 Check the arguments for the script to see what they do.
 
 What this repository does on first run:
-- We provide a default MLO docker image `mlo/mlo:v1` that should work for most use cases. If you use this default image, the first time you run `csub.py`, it will create a working directory with your username inside `/mloscratch/homes`. Moreover, for each symlink you find the `user.yaml` file the script will create the respective file/folder inside `mloscratch` and link it to the home folder of the pod. This is to ensure that these files and folders are persistent across different pods. 
+- We provide a default docker image `mlo/mlo:v1` that should work for most use cases. If you use this default image, the first time you run `csub.py`, it will create a working directory with your username inside `/mloscratch/homes`. Moreover, for each symlink you find the `user.yaml` file the script will create the respective file/folder inside `mloscratch` and link it to the home folder of the pod. This is to ensure that these files and folders are persistent across different pods. 
     - **Small caveat**: csub.py expects your image to have zsh installed.
-- The `entrypoint.sh` script is also installing conda in your scratch home folder. This means that you can manage your packages via conda (as you're probably used to), and the environment is shared across pods.
-  - In other words: you can use have and environment (e.g. `conda activate env`) and this environment stays persistent.
-- Alternatively, the bash script `utils/conda.sh` that you can find in your pod under `docker/conda.sh`, installs some packages in `utils/extra_packages.txt` in the default environment and creates an additional `torch` environment with pytorch and the packages in `utils/extra_packages.txt`. It's up to you to run this or manually customize your environment installation and configuration. 
 
 If you want to have another workflow, you can also directly use the run:ai CLI together with other docker images. See [this section](#alternative-workflow-using-the-runai-cli-and-base-docker-images-with-pre-installed-packages) for more details.
+
+**Note to LauzHack participants**: We do not recommend you to change the default image. 
 
 ## Managing pods
 After starting pods with the script, you can manage your pods using run:ai and the following commands: 
