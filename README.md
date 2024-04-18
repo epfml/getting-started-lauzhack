@@ -1,9 +1,9 @@
 # LauzHack LLM Training: Getting started with the EPFL Clusters
-Welcome to the LLM training track at LauzHack! This repository contains the basic steps to start running your model and script on the EPFL Clusters (called RCP) -- so that you don't have to go through the countless documentations by yourself!
+Welcome to the LLM training track at LauzHack! This repository contains the basic steps to start running your model and script on the EPFL GPU Cluster (called RCP) -- so that you don't have to go through the countless documentations by yourself!
 
-We provide you access to the RCP cluster (EPFL-wide). It has A100 (80GB) GPUs. The system is built on top of [Docker](https://www.docker.com) (containers), [Kubernetes](https://kubernetes.io) (automating deployment of containers) and [run:ai](https://run.ai) (scheduler on top of Kubernetes).
+We provide you access to the RCP cluster. It has A100 (80GB) GPUs. The job system is using [run:ai](https://run.ai) (scheduler on top of Kubernetes).
 
-For starters, you should go through the [minimal basic setup](#minimal-basic-setup) first. 
+For starters, you should first go through the [minimal basic setup](#minimal-basic-setup) right below here. 
 
 If you come up with any question about the cluster or the setup that you do not find answered here, try and talk to other participants, or google :) Also, please do not hesitate to reach out to any of your colleagues or the organizers (e.g. on Discord), we are happy to help you out.
 
@@ -34,7 +34,7 @@ The step-by-step instructions for first time users to quickly get a job running.
 
 ## 1: Pre-setup (access, repository)
 
-**Group access:** For each team, you need to have one EPFL member to get access to the cluster. Send this one member's gaspar account to us to add you to the group `runai-mlo-lauzhack` (https://groups.epfl.ch/) by sending a message on the Discord LauzHack thread. Because of limited resources, we can only add one person per team, so make sure to coordinate this within your team. 
+**Group access:** For each team, you need to have one EPFL member to get access to the cluster. Share this one member's epfl email with us, to add you to the group `runai-mlo-lauzhack` (https://groups.epfl.ch/) by sending a message on the Discord LauzHack thread. Because of limited GPU resources, we can only add one person per team, so make sure to coordinate this within your team. 
 
 **Prepare your code:** While you are waiting to get access, create a fork of the [llm-baselines](https://github.com/epfml/llm-baselines) repository. This is the fork that you will use to run your experiments and submit your solution. You can already checkout some of the code if you want to get a head start. Make sure you add all of your team members to the repository.
 
@@ -159,7 +159,7 @@ To easily attach a VSCODE window to a pod we recommend the following steps:
 You can also see a pictorial description [here](https://wiki.rcp.epfl.ch/en/home/CaaS/how-to-vscode).
 
 # Extra details on usage of the cluster
-This is more info on the cluster, the scripts, and the setup. You do not need to read this (unless you're interested in the details or want to go beyond the interactive workflow above). It is a copy of our internal documentation.
+This is more info on the GPU cluster, the scripts, and the setup. You do not need to read this (unless you're interested in the details or want to go beyond the interactive workflow above). It is a copy of our internal documentation.
 
 ## Using the python script to launch jobs
 The python script `csub.py` is a wrapper around the run:ai CLI that makes it easier to launch jobs. It is meant to be used for both interactive jobs (e.g. notebooks) and training jobs.
