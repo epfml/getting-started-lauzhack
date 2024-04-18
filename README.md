@@ -16,15 +16,18 @@ If you come up with any question about the cluster or the setup that you do not 
 # Minimal basic setup
 The step-by-step instructions for first time users to quickly get a job running. 
 
-> [!TIP] After completing the setup, the **TL;DR** of the interaction with the cluster is:
+> [!TIP] 
+> After completing the setup, the **TL;DR** of the interaction with the cluster is:
 > 
-> Get a running job with one GPU that is reserved for you: `python csub.py -n sandbox`
+> * Get a running job with one GPU that is reserved for you: `python csub.py -n sandbox`
 > 
-> Connect to a terminal inside your job: `runai exec sandbox -it -- zsh`
+> * Connect to a terminal inside your job: `runai exec sandbox -it -- zsh`
 > 
-> Run your code: `cd /mloscratch/<your username>; python src/main.py --wandb`
+> * Run your code: `cd /mloscratch/<your username>; python src/main.py --wandb`
 >
-> In one go, you can also do: `python csub.py -n sandbox --train --command "cd /mloscratch/<your username>; python src/main.py --wandb"`
+> * In one go, you can also do: `python csub.py -n sandbox --train --command "cd /mloscratch/<your username>; python src/main.py --wandb"`
+
+---
 
 > [!IMPORTANT]
 > Make sure you are on the EPFL wifi or connected to the VPN. The cluster is otherwise not accessible.
@@ -39,7 +42,7 @@ The step-by-step instructions for first time users to quickly get a job running.
 
 The following are just a bunch of commands you need to run to get started. If you do not understand them in detail, you can copy-paste them into your terminal :)
 
-## 2: Setup the tools
+## 2: Setup the tools on your own machine
 
 > [!IMPORTANT]
 > The setup below was tested on macOS with Apple Silicon. If you are using a different system, you may need to adapt the commands.
@@ -119,12 +122,14 @@ runai exec sandbox -it -- zsh
 
 1. Clone your fork of the [llm-baselines](https://github.com/epfml/llm-baselines) repository into the pod **inside your home folder**.
 ```bash
+# Inside the pod
 cd /mloscratch/<your_username>
 git clone https://github.com/<your username>/llm-baselines.git
 cd llm-baselines
 ```
 2. Now you can run the code as you would on your local machine. For example, to run the `train.py` script, you can use the following command:
 ```bash
+# Inside the pod, inside /mloscratch/<your username>/llm-baselines
 python src/main.py --wandb
 ```
 
