@@ -118,7 +118,7 @@ runai exec sandbox -it -- zsh
 
 6. If everything worked correctly, you should be inside a terminal on the cluster!
 
-## 3: Cloning and running the LLM training code
+## 5: Cloning and running the LLM training code
 
 1. Clone your fork of the [llm-baselines](https://github.com/epfml/llm-baselines) repository into the pod **inside your home folder**.
 ```bash
