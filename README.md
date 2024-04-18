@@ -151,7 +151,7 @@ For remote development (changing code, debugging, etc.), we recommend using VSCo
 ## Using VSCODE
 To easily attach a VSCODE window to a pod we recommend the following steps: 
 1. Install the [Kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools) and [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extensions.
-2. From your VSCODE window, click on Kubernetes -> rcp-cluster -> Workloads -> Pods, and you should be able to see all your running pods.
+2. From your VSCODE window, click on Kubernetes -> rcp-context -> Workloads -> Pods, and you should be able to see all your running pods.
 3. Right-click on the pod you want to access and select `Attach Visual Studio Code`, this will start a vscode session attached to your pod.
 4. The symlinks ensure that settings and extensions are stored in `mloscratch/<your username>` and therefore shared across pods.
 5. Note that when opening the VS code window, it opens the home folder of the pod (not scratch!). You can navigate to your working directory (code) by navigating to `/mloscratch/<your username>`.
