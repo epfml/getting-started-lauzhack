@@ -235,17 +235,13 @@ For very secure long-term storage, we have:
 > You cannot mount mlodata or mloraw on pods. Use the haas machine below to access it.
 
 ### Moving data onto/between storage
-Since `mloscratch` is not _replicated_, whenever you need things to become permanent, move them to `mlodata1`. This could be the case for paper artifacts, certain results or checkpoints, and so on. 
-
-Currently, if you need to move things between `mlodata1` and `scratch`, you need to do this manually via a machine provided by IT:
+Currently, if you need to move additional things to  `scratch`, you need to do this manually via a machine provided by IT:
 ```bash
   # For basic file movement, folder creation, or
   # copying from/to mlodata1 to/from scratch:
   ssh <gaspar_username>@haas001.rcp.epfl.ch
 ```
-The volumes are mounted inside the folders `/mnt/mlo/mlodata1`, `/mnt/mlo/mloraw1`, `/mnt/mlo/scratch`. You can copy files between them using `cp` or `rsync`.
-
-**TODO:** Update with permanent machine for MLO once we have it.
+The volume is mounted inside the folder `/mnt/mlo/scratch`. You can copy files between them using `cp` or `rsync`.
 
 
 ## Quick links
@@ -326,10 +322,3 @@ kubectl port-forward <pod_name> 8888:8888
   ├── faq.md                        # FAQ
   └── runai_cli.md                  # Run:ai CLI guide
 ```
-
-## Other cluster-related code repositories
-These repositories are mostly by previous PhDs. They used these repositories to manage shared compute infrastructure. If you want to contribute, please ask Martin to add you as an editor.
-* [epfml/epfml-utils](https://github.com/epfml/epfml-utils)
-  * Python package (pip install epfml-utils) for shared tooling.
-* [epfml/mlocluster-setup](https://github.com/epfml/mlocluster-setup)
-  * Base docker images, and setup code for semi-permanent shared machines (less recommended).
