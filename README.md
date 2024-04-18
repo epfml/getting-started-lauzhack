@@ -3,9 +3,12 @@ Welcome to the LLM training track at LauzHack! This repository contains the basi
 
 We provide you access to the RCP cluster (EPFL-wide). It has A100 (80GB) GPUs. The system is built on top of [Docker](https://www.docker.com) (containers), [Kubernetes](https://kubernetes.io) (automating deployment of containers) and [run:ai](https://run.ai) (scheduler on top of Kubernetes).
 
-For starters, we recommend you to go through the [minimal basic setup](#minimal-basic-setup) first and then read the [important notes](#important-notes-and-workflow). 
+For starters, you should go through the [minimal basic setup](#minimal-basic-setup) first. 
 
-If you come up with any question about the cluster or the setup that you do not find answered here, you can check the [frequently asked questions page](docs/faq.md). Also, please do not hesitate to reach out to any of your colleagues or the organizers (e.g. on Discord), we are happy to help you out.
+If you come up with any question about the cluster or the setup that you do not find answered here, try and talk to other participants, or google :) Also, please do not hesitate to reach out to any of your colleagues or the organizers (e.g. on Discord), we are happy to help you out.
+
+> [!TIP]
+> We know the setup below may seem daunting at first. But don't worry, the guide tries to make it as simple as possible for you by providing you all commands in order, and with a script that does most of the work for you. You do not need to understand the commands in detail. The only requirement is that you have a basic understanding of how to use a terminal and git.
 
 > [!CAUTION]
 > You are sharing the cluster with other teams. Please be mindful of the resources you use. **Do not forget to stop your jobs when not used!**
@@ -13,12 +16,22 @@ If you come up with any question about the cluster or the setup that you do not 
 # Minimal basic setup
 The step-by-step instructions for first time users to quickly get a job running. 
 
+> [!TIP] After completing the setup, the **TL;DR** of the interaction with the cluster is:
+> 
+> Get a running job with one GPU that is reserved for you: `python csub.py -n sandbox`
+> 
+> Connect to a terminal inside your job: `runai exec sandbox -it -- zsh`
+> 
+> Run your code: `cd /mloscratch/<your username>; python src/main.py --wandb`
+>
+> In one go, you can also do: `python csub.py -n sandbox --train --command "cd /mloscratch/<your username>; python src/main.py --wandb"`
+
 > [!IMPORTANT]
-> Make sure you are on the EPFL wifi or connected to the VPN.
+> Make sure you are on the EPFL wifi or connected to the VPN. The cluster is otherwise not accessible.
 
 ## 1: Pre-setup (access, repository)
 
-**Group access:** For each team, you need to have one EPFL member to get access to the cluster. Send this one member's gaspar account to us to add you to the group `runai-mlo-lauzhack` (https://groups.epfl.ch/) by sending a message on the Discord channel #TODO. Because of limited resources, we can only add one person per team, so make sure to coordinate this within your team. 
+**Group access:** For each team, you need to have one EPFL member to get access to the cluster. Send this one member's gaspar account to us to add you to the group `runai-mlo-lauzhack` (https://groups.epfl.ch/) by sending a message on the Discord LauzHack thread. Because of limited resources, we can only add one person per team, so make sure to coordinate this within your team. 
 
 **Prepare your code:** While you are waiting to get access, create a fork of the [llm-baselines](https://github.com/epfml/llm-baselines) repository. This is the fork that you will use to run your experiments and submit your solution. You can already checkout some of the code if you want to get a head start. Make sure you add all of your team members to the repository.
 
@@ -27,6 +40,10 @@ The step-by-step instructions for first time users to quickly get a job running.
 The following are just a bunch of commands you need to run to get started. If you do not understand them in detail, you can copy-paste them into your terminal :)
 
 ## 2: Setup the tools
+
+> [!IMPORTANT]
+> The setup below was tested on macOS with Apple Silicon. If you are using a different system, you may need to adapt the commands.
+> For Windows, we have no experience with the setup and thereby recommend WSL (Windows Subsystem for Linux) to run the commands.
 
 1. Install kubectl. To make sure the version matches with the clusters (status: 15.12.2023), on macOS with Apple Silicon, run the following commands. For other systems, you will need to change the URL in the command above (check https://kubernetes.io/docs/tasks/tools/install-kubectl/). Make sure that the version matches with the version of the cluster!
 ```bash
@@ -52,7 +69,7 @@ The following are just a bunch of commands you need to run to get started. If yo
       sudo chown root: /usr/local/bin/runai
    ```
 
-## Login and run a test job
+## 3: Login
 Once you have access to the cluster and the tools installed, you can start setting up the cluster and running a test job.
 
 4. Login to the cluster.
@@ -69,20 +86,26 @@ Once you have access to the cluster and the tools installed, you can start setti
 
 Next, we provide a script in this repository to make your life easier to get started. Then we show you how to run the llm-baselines code.
 
-## Use this repo to start a LLM training run with your fork of the llm-baselines code
+## 4: Use this repo to start a LLM training run with your fork of the llm-baselines code
 
-1. Clone this repository and create a `user.yaml` file in the root folder of the repo using the template in `templates/user_template.yaml` but <ins>**do not modify the template**</ins>.
+1. Clone this repository and create a `user.yaml` file in the root folder of the repo using the template in `templates/user_template.yaml`.
+```bash
+git clone https://github.com/epfml/getting-started-lauzhack.git
+cd getting-started-lauzhack
+touch user.yaml # then copy the content from templates/user_template.yaml inside here and update
+```
 
 2. Fill in `user.yaml` your username and userID in `user.yaml`. You can find this information in your profile on people.epfl.ch (e.g. https://people.epfl.ch/alexander.hagele) under “Administrative data”. **Also important for logging**, get an API key from [Weights and Biases](https://wandb.ai/) and add it to the yaml. 
    
-3. Create a pod with 1 GPU which expires in 12 hours (you may need to install pyyaml with `pip install pyyaml` first).
+3. Create a pod with 1 GPU (you may need to install pyyaml with `pip install pyyaml` first).
 ```bash
 python csub.py -n sandbox
 ```
 
 4. Wait until the pod has a 'running' status -- this can take a bit (max ~5 min or so). Check the status of the job with 
 ```bash
-runai describe job sandbox
+runai list # shows all jobs
+runai describe job sandbox # shows the status of the job sandbox
 ```
 
 5. When it is running, connect to the pod with the command:
@@ -92,7 +115,7 @@ runai exec sandbox -it -- zsh
 
 6. If everything worked correctly, you should be inside a terminal on the cluster!
 
-## 3: Cloning your Running the LLM training code
+## 3: Cloning and running the LLM training code
 
 1. Clone your fork of the [llm-baselines](https://github.com/epfml/llm-baselines) repository into the pod **inside your home folder**.
 ```bash
@@ -107,14 +130,26 @@ python src/main.py --wandb
 
 Hopefully, this should work and you're up and running! For remote development (changing code, debugging, etc.), we recommend using VSCode. You can find more information on how to set it up in the [VSCode section](#using-vscode).
 
-> [!IMPORTANT]
+> [!TIP]
 > Generally, the workflow we recommend is simple: develop your code locally or on the cluster (e.g. with VS Code), then push it to your repository. Once you want to try, run it on the cluster with the terminal that is attached via `runai exec sandbox -it -- zsh`. This way, you can keep your code and experiments organized and reproducible.
 >
-> Note that your pods **can be killed anytime**. This means you might need to restart an experiment (with the `python csub.py` command we give above).
+> Note that your pods **can be killed anytime**. This means you might need to restart an experiment (with the `python csub.py` command we give above). You can see the status of your jobs with `runai list`. If a job has status "Failed", you have to delete it via `runai delete job sandbox` before being able to start the same job again.
 > 
-> **Keep your files inside your home folder**: Importantly, when a job is restarted or killed, everything inside the container folders of `~/` are lost. This is why you need to work inside `/mloscratch`.
+> **Keep your files inside your home folder**: Importantly, when a job is restarted or killed, everything inside the container folders of `~/` are lost. This is why you need to work inside `/mloscratch/<your username>`.
+>
+> To have a job that can run in the background, do `python csub.py -n sandbox --train --command "cd /mloscratch/<your username>; python src/main.py --wandb"`
 >
 > The rest of the README is more detailed information on the cluster, the scripts, and the setup. 
+
+## Using VSCODE
+To easily attach a VSCODE window to a pod we recommend the following steps: 
+1. Install the [Kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools) and [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extensions.
+2. From your VSCODE window, click on Kubernetes -> rcp-cluster -> Workloads -> Pods, and you should be able to see all your running pods.
+3. Right-click on the pod you want to access and select `Attach Visual Studio Code`, this will start a vscode session attached to your pod.
+4. The symlinks ensure that settings and extensions are stored in `mloscratch/<your username>` and therefore shared across pods.
+5. Note that when opening the VS code window, it opens the home folder of the pod (not scratch!). You can navigate to your working directory (code) by navigating to `/mloscratch/homes/<your username>`.
+
+You can also see a pictorial description [here](https://wiki.rcp.epfl.ch/en/home/CaaS/how-to-vscode).
 
 # Extra details on usage of the cluster
 This is more info on the cluster, the scripts, and the setup. You do not need to read this (unless you're interested in the details or want to go beyond the interactive workflow above). It is a copy of our internal documentation.
@@ -178,17 +213,6 @@ Of course, the script is just one suggested workflow that tries to maximize prod
 > * CPU-only pods are cheap, approx 3 CHF/month, so we recommend creating a CPU-only machine that you can let run and use for code development/debugging through VSCODE.
 > * When your code is ready and you want to run some experiments or you need to debug on GPU, you can create one or more new pods with GPU. Simply specify the command in the python launch script.
 > * Using a training job makes sure that you kill the pod when your code/experiment is finished in order to save money.
-
-
-## Using VSCODE
-To easily attach a VSCODE window to a pod we recommend the following steps: 
-1. Install the [Kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools) and [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extensions.
-2. From your VSCODE window, click on Kubernetes -> rcp-cluster -> Workloads -> Pods, and you should be able to see all your running pods.
-3. Right-click on the pod you want to access and select `Attach Visual Studio Code`, this will start a vscode session attached to your pod.
-4. The symlinks ensure that settings and extensions are stored in `mloscratch/homes/<gaspar username>` and therefore shared across pods.
-5. Note that when opening the VS code window, it opens the home folder of the pod (not scratch!). You can navigate to your working directory (code) by navigating to `/mloscratch/homes/<your username>`.
-
-You can also see a pictorial description [here](https://wiki.rcp.epfl.ch/en/home/CaaS/how-to-vscode).
 
 
 ## File management

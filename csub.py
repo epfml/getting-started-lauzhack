@@ -254,22 +254,41 @@ spec:
         if args.dry:
             print(cfg)
         else:
+            # Run the subprocess and capture stdout and stderr
             result = subprocess.run(
                 ["kubectl", "apply", "-f", f.name],
                 # check=True,
-                capture_output=True,
-                # text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
             )
-            print(result.stdout)
-            print(result.stderr)
 
-    print("\nThe following commands may come in handy:")
-    print(f"runai exec {args.name} -it zsh # opens an interactive shell on the pod")
-    print(
-        f"runai delete job {args.name} # kills the job and removes it from the list of jobs"
-    )
-    print(
-        f"runai describe job {args.name} # shows information on the status/execution of the job"
-    )
-    print("runai list jobs # list all jobs and their status")
-    print(f"runai logs {args.name} # shows the output/logs for the job")
+            # Check if there was an error
+            if result.returncode != 0:
+                print("Error encountered:")
+                # Prettify and print the stderr
+                print(result.stderr)
+            else:
+                print("Output:")
+                # Prettify and print the stdout
+                print(result.stdout)
+
+                print("If the above says 'created', the job has been submitted.")
+
+                print(
+                    f"If the above says 'job unchanged', the job with name {args.name} "
+                    f"already exists (and you might need to delete it)."
+                )
+
+                print("\nThe following commands may come in handy:")
+                print(
+                    f"runai exec {args.name} -it zsh # opens an interactive shell on the pod"
+                )
+                print(
+                    f"runai delete job {args.name} # kills the job and removes it from the list of jobs"
+                )
+                print(
+                    f"runai describe job {args.name} # shows information on the status/execution of the job"
+                )
+                print("runai list jobs # list all jobs and their status")
+                print(f"runai logs {args.name} # shows the output/logs for the job")
