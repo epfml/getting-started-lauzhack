@@ -98,7 +98,7 @@ cd getting-started-lauzhack
 touch user.yaml # then copy the content from templates/user_template.yaml inside here and update
 ```
 
-2. Fill in `user.yaml` your username and userID in `user.yaml`. You can find this information in your profile on people.epfl.ch (e.g. https://people.epfl.ch/alexander.hagele) under “Administrative data”. **Also important for logging**, get an API key from [Weights and Biases](https://wandb.ai/) and add it to the yaml. 
+2. Fill in `user.yaml` with your username, userID in `user.yaml` and also update the working_dir with your username. You can find this information in your profile on people.epfl.ch (e.g. https://people.epfl.ch/alexander.hagele) under “Administrative data”. **Also important for logging**, get an API key from [Weights and Biases](https://wandb.ai/) and add it to the yaml. 
    
 3. Create a pod with 1 GPU (you may need to install pyyaml with `pip install pyyaml` first).
 ```bash
